@@ -1,0 +1,1 @@
+from .daily_report_repository import DailyReportRepositoryImpl
