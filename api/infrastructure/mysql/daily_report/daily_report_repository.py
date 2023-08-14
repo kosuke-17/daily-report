@@ -1,3 +1,5 @@
+from typing import Optional
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm.session import Session
 from domain.daily_report import DailyReport, DailyReportRepository
 from usecase.daily_report.daily_report_command_usecase import (
@@ -17,6 +19,18 @@ class DailyReportRepositoryImpl(DailyReportRepository):
             self.session.add(daily_report_dto)
         except:
             raise
+
+    def find_by_id(self, daily_report_id: str) -> Optional[DailyReport]:
+        try:
+            daily_report_dto: DailyReportDTO = (
+                self.session.query(DailyReportDTO).filter_by(id=daily_report_id).one()
+            )
+        except NoResultFound:
+            return None
+        except:
+            raise
+
+        return daily_report_dto.to_entity()
 
 
 class DailyReportCommandUseCaseUnitOfWorkImpl(DailyReportCommandUseCaseUnitOfWork):

@@ -47,12 +47,11 @@ class DailyReportCommandUseCaseImpl(DailyReportCommandUseCase):
             uuid = shortuuid.uuid()
             daily_report = DailyReport(daily_report_id=uuid, memo=data.memo)
 
-            created_daily_report = self.uow.daily_report_repository.create(daily_report)
-            print(created_daily_report)
-            print(type(created_daily_report))
+            self.uow.daily_report_repository.create(daily_report)
             self.uow.commit()
 
-            # created_daily_report = self.uow.daily_report_repository.find_by_id(uuid)
+            created_daily_report = self.uow.daily_report_repository.find_by_id(uuid)
+
         except:
             self.uow.rollback()
             raise

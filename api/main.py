@@ -1,7 +1,21 @@
+import logging
+from logging import config
 from typing import Iterator
+from domain.daily_report_exception import BookNotFoundError
+from presentation.schema.daily_report.daily_report_error_message import (
+    ErrorMessageDailyReportNotFound,
+)
+from infrastructure.mysql.daily_report.daily_report_service import (
+    DailyReportQueryServiceImpl,
+)
 
-from fastapi import Depends, FastAPI, status
+from fastapi import Depends, FastAPI, HTTPException, status
 from sqlalchemy.orm import Session
+from usecase.daily_report.daily_report_query_service import DailyReportQueryService
+from usecase.daily_report.daily_report_query_usecase import (
+    DailyReportQueryUseCase,
+    DailyReportQueryUseCaseImpl,
+)
 from domain.daily_report import DailyReportRepository
 from infrastructure.mysql.daily_report.daily_report_repository import (
     DailyReportCommandUseCaseUnitOfWorkImpl,
@@ -17,6 +31,9 @@ from usecase.daily_report.daily_report_command_usecase import (
 )
 from usecase.daily_report.daily_report_query_model import DailyReportReadModel
 
+config.fileConfig("logging.conf", disable_existing_loggers=False)
+logger = logging.getLogger(__name__)
+
 app = FastAPI()
 
 create_tables()
@@ -31,6 +48,15 @@ def get_session() -> Iterator[Session]:
         session.close()
 
 
+def daily_report_query_usecase(
+    session: Session = Depends(get_session),
+) -> DailyReportQueryUseCase:
+    daily_report_query_service: DailyReportQueryService = DailyReportQueryServiceImpl(
+        session
+    )
+    return DailyReportQueryUseCaseImpl(daily_report_query_service)
+
+
 def daily_report_command_usecase(
     session: Session = Depends(get_session),
 ) -> DailyReportCommandUseCase:
@@ -39,6 +65,40 @@ def daily_report_command_usecase(
         session, daily_report_repository=daily_report_repository
     )
     return DailyReportCommandUseCaseImpl(uow)
+
+
+@app.get(
+    "/daily-reports/{daily_report_id}",
+    response_model=DailyReportReadModel,
+    status_code=status.HTTP_200_OK,
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            "model": ErrorMessageDailyReportNotFound,
+        }
+    },
+)
+async def get_daily_report(
+    daily_report_id: str,
+    daily_report_query_usecase: DailyReportQueryUseCase = Depends(
+        daily_report_query_usecase
+    ),
+):
+    try:
+        dailyReport = daily_report_query_usecase.fetch_daily_report_by_id(
+            daily_report_id
+        )
+    except BookNotFoundError as err:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=err.message,
+        )
+    except Exception as err:
+        logger.error(err)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+    return dailyReport
 
 
 @app.post(
@@ -52,5 +112,18 @@ async def create_daily_reports(
         daily_report_command_usecase
     ),
 ):
-    #  後でtry exceptを書く
-    return daily_report_command_usecase.create_daily_report(data)
+    try:
+        daily_report = daily_report_command_usecase.create_daily_report(data)
+
+    except Exception as e:
+        logger.error(e)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+    except e:
+        logger.error(e)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+    return daily_report

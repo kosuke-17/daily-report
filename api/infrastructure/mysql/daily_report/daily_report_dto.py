@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Optional
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
+from usecase.daily_report.daily_report_query_model import DailyReportReadModel
 from domain.daily_report import DailyReport
 
 from infrastructure.mysql.database import Base
@@ -15,15 +16,22 @@ class DailyReportDTO(Base):
     __tablename__ = "daily_report"
     id: Mapped[str] = mapped_column(String(255), primary_key=True, autoincrement=False)
     memo: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
-    # created_at: Mapped[int] = mapped_column(index=True, nullable=False)
-    # updated_at: Mapped[int] = mapped_column(index=True, nullable=False)
+
+    def to_entity(self) -> DailyReportReadModel:
+        return DailyReportReadModel(
+            id=self.id,
+            memo=self.memo,
+        )
+
+    def to_read_model(self) -> DailyReportReadModel:
+        return DailyReportReadModel(
+            id=self.id,
+            memo=self.memo,
+        )
 
     @staticmethod
     def from_entity(daily_report: DailyReport) -> "DailyReportDTO":
-        now = unixtimestamp()
         return DailyReportDTO(
             id=daily_report.daily_report_id,
             memo=daily_report.memo,
-            # created_at=now,
-            # updated_at=now,
         )
