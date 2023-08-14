@@ -1,6 +1,6 @@
 import logging
 from logging import config
-from typing import Iterator
+from typing import Iterator, List
 from domain.daily_report_exception import BookNotFoundError
 from presentation.schema.daily_report.daily_report_error_message import (
     ErrorMessageDailyReportNotFound,
@@ -65,6 +65,30 @@ def daily_report_command_usecase(
         session, daily_report_repository=daily_report_repository
     )
     return DailyReportCommandUseCaseImpl(uow)
+
+
+@app.get(
+    "/daily-reports",
+    response_model=List[DailyReportReadModel],
+    status_code=status.HTTP_200_OK,
+)
+async def get_daily_reports(
+    daily_report_query_usecase: DailyReportQueryUseCase = Depends(
+        daily_report_query_usecase
+    ),
+):
+    try:
+        daily_reports = daily_report_query_usecase.fetch_daily_reports()
+    except Exception as err:
+        print("エラー発生")
+        logger.error(err)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+    print(daily_reports)
+    print(type(daily_reports))
+    return daily_reports
 
 
 @app.get(

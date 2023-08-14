@@ -13,9 +13,9 @@ class DailyReportQueryUseCase(ABC):
     def fetch_daily_report_by_id() -> Optional[DailyReportReadModel]:
         raise NotImplementedError
 
-    # @abstractmethod
-    # def fetch_books(self) -> List[DailyReportReadModel]:
-    #     raise NotImplementedError
+    @abstractmethod
+    def fetch_daily_reports(self) -> List[DailyReportReadModel]:
+        raise NotImplementedError
 
 
 class DailyReportQueryUseCaseImpl(DailyReportQueryUseCase):
@@ -36,7 +36,7 @@ class DailyReportQueryUseCaseImpl(DailyReportQueryUseCase):
 
         return dailyReport
 
-    def fetch_daily_report(self) -> List[DailyReportReadModel]:
+    def fetch_daily_reports(self) -> List[DailyReportReadModel]:
         try:
             dailyReports = self.daily_report_query_service.find_all()
         except:
