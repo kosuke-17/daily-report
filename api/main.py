@@ -8,6 +8,7 @@ from presentation.schema.daily_report.daily_report_error_message import (
 from infrastructure.mysql.daily_report.daily_report_service import (
     DailyReportQueryServiceImpl,
 )
+from starlette.middleware.cors import CORSMiddleware
 
 from fastapi import Depends, FastAPI, HTTPException, status
 from sqlalchemy.orm import Session
@@ -38,6 +39,15 @@ app = FastAPI()
 
 create_tables()
 
+
+# CORSを回避するために追加（今回の肝）
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,   # 追記により追加
+    allow_methods=["*"],      # 追記により追加
+    allow_headers=["*"]       # 追記により追加
+)
 
 def get_session() -> Iterator[Session]:
     """get a session from the database."""
