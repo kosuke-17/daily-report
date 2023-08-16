@@ -1,19 +1,21 @@
 import { put, call, takeLatest, StrictEffect } from 'redux-saga/effects'
 import axios, { AxiosResponse } from 'axios'
-import { getDailyReports as getDailyReportsSlice } from '../slices/'
+import {
+  DailyReport,
+  getDailyReports as getDailyReportsSlice,
+} from '../slices/daily-reports'
 
 const GET_DAILY_REPORT = 'GET_DAILY_REPORT'
 
-function applyAxios(): Promise<AxiosResponse<{ data: any }>> {
+function applyAxios(): Promise<AxiosResponse<{ data: DailyReport[] }>> {
   const url = 'http://localhost:8000/daily-reports'
   return axios.get(url)
 }
 
-function* callApi(): Generator<StrictEffect, any, { data: any }> {
+function* callApi(): Generator<StrictEffect, any, { data: DailyReport[] }> {
   try {
     const res = yield call(applyAxios)
-    console.log({ res })
-    yield put(getDailyReportsSlice(res))
+    yield put(getDailyReportsSlice(res.data))
   } catch (e) {
     console.log(e)
   }
