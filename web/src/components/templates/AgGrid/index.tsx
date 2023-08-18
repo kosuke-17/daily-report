@@ -34,11 +34,7 @@ const AgGrid = () => {
   return (
     <Box>
       <h2>Ag-Gridのコンポーネント</h2>
-      <Box
-        className='ag-theme-alpine'
-        sx={{ height: 400 }}
-        style={{ height: 400, width: 400 }}
-      >
+      <Box className='ag-theme-alpine' sx={{ height: 600, width: 600 }}>
         <AgGridReact rowData={dailyReports} columnDefs={columnDefs} />
       </Box>
       <Box sx={{ mt: 1 }}>
