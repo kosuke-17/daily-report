@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react'
 import Button from '../../atoms/Button'
 import { ColDef } from 'ag-grid-community'
 import { useNavigate } from 'react-router-dom'
-import Box from '@mui/material/Box'
 import AgGrid from '../../organisms/AgGrid'
+import Stack from '@mui/material/Stack'
 
 type JSONPlaceholderType = {
   userId: number
@@ -40,15 +40,15 @@ const JSONPlaceholder = () => {
   return (
     <>
       <h2>JSONPlaceholder</h2>
-      <AgGrid
-        agGridReactProps={{
-          columnDefs,
-          rowData: posts,
-        }}
-      />
-      <Box sx={{ mt: 1 }}>
+      <Stack spacing={1}>
+        <AgGrid
+          agGridReactProps={{
+            columnDefs,
+            rowData: posts,
+          }}
+        />
         <Button text='Ag-Gridに移動' onClick={moveToDailyReport} />
-      </Box>
+      </Stack>
     </>
   )
 }

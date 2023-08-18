@@ -6,10 +6,10 @@ import {
 } from '../../../redux/slices/daily-reports'
 import { ColDef } from 'ag-grid-community'
 import { useEffect } from 'react'
-import Box from '@mui/material/Box'
 import { useNavigate } from 'react-router-dom'
 import Button from '../../atoms/Button'
 import AgGrid from '../../organisms/AgGrid'
+import Stack from '@mui/material/Stack'
 
 const DailyReports = () => {
   const navigate = useNavigate()
@@ -32,18 +32,18 @@ const DailyReports = () => {
   if (!dailyReports.length) return null
 
   return (
-    <Box>
+    <>
       <h2>Ag-Gridのコンポーネント</h2>
-      <AgGrid
-        agGridReactProps={{
-          columnDefs,
-          rowData: dailyReports,
-        }}
-      />
-      <Box sx={{ mt: 1 }}>
+      <Stack spacing={1}>
+        <AgGrid
+          agGridReactProps={{
+            columnDefs,
+            rowData: dailyReports,
+          }}
+        />
         <Button text='JSONplaceholderに移動' onClick={moveToPlaceHolder} />
-      </Box>
-    </Box>
+      </Stack>
+    </>
   )
 }
 
