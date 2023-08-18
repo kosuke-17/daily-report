@@ -1,10 +1,12 @@
-import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import Button from '../../atoms/Button'
 import { ColDef } from 'ag-grid-community'
 import { useNavigate } from 'react-router-dom'
 import AgGrid from '../../organisms/AgGrid'
 import Stack from '@mui/material/Stack'
+import { useDispatch, useSelector } from 'react-redux'
+import { getArticles } from '../../../redux/sagas/articles'
+import { selectArticles } from '../../../redux/slices/articles'
 
 type JSONPlaceholderType = {
   userId: number
@@ -14,17 +16,14 @@ type JSONPlaceholderType = {
 }
 
 const JSONPlaceholder = () => {
-  const [articles, setArticles] = useState<JSONPlaceholderType[]>([])
-
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const articles = useSelector(selectArticles)
 
   useEffect(() => {
-    const getArticles = async () => {
-      const res = await axios.get('https://jsonplaceholder.typicode.com/posts')
-      setArticles(res.data)
-    }
-    getArticles()
-  }, [])
+    dispatch(getArticles())
+  }, [dispatch])
 
   const moveToDailyReport = () => {
     navigate('/')
