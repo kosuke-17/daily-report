@@ -1,15 +1,15 @@
 import { AgGridReact } from 'ag-grid-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getDailyReports } from '../../redux/sagas/daily-report'
+import { getDailyReports } from '../../../redux/sagas/daily-report'
 import {
   DailyReport,
   selectDailyReports,
-} from '../../redux/slices/daily-reports'
+} from '../../../redux/slices/daily-reports'
 import { ColDef } from 'ag-grid-community'
 import { useEffect } from 'react'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router-dom'
+import Button from '../../atoms/Button'
 
 const AgGrid = () => {
   const navigate = useNavigate()
@@ -19,6 +19,10 @@ const AgGrid = () => {
   useEffect(() => {
     dispatch(getDailyReports())
   }, [dispatch])
+
+  const moveToPlaceHolder = () => {
+    navigate('/placeholder')
+  }
 
   const columnDefs: ColDef<DailyReport>[] = [
     { field: 'id', headerName: 'ID' },
@@ -38,15 +42,7 @@ const AgGrid = () => {
         <AgGridReact rowData={dailyReports} columnDefs={columnDefs} />
       </Box>
       <Box sx={{ mt: 1 }}>
-        <Button
-          variant='contained'
-          onClick={() => {
-            navigate('/placeholder')
-          }}
-          sx={{}}
-        >
-          JSONplaceholderに移動
-        </Button>
+        <Button text='JSONplaceholderに移動' onClick={moveToPlaceHolder} />
       </Box>
     </Box>
   )

@@ -1,8 +1,8 @@
 import { Provider } from 'react-redux'
-import AgGrid from './components/AgGrid'
+import AgGrid from './components/templates/AgGrid'
 import store from './redux/store'
 import { Route, Routes } from 'react-router-dom'
-import JSONPlaceholder from './components/JSONPlaceholder'
+import JSONPlaceholder from './components/templates/JSONPlaceholder'
 
 const App = () => {
   return (
