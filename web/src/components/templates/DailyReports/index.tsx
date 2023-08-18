@@ -1,4 +1,3 @@
-import { AgGridReact } from 'ag-grid-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getDailyReports } from '../../../redux/sagas/daily-report'
 import {
@@ -10,6 +9,7 @@ import { useEffect } from 'react'
 import Box from '@mui/material/Box'
 import { useNavigate } from 'react-router-dom'
 import Button from '../../atoms/Button'
+import AgGrid from '../../organisms/AgGrid'
 
 const DailyReports = () => {
   const navigate = useNavigate()
@@ -34,9 +34,12 @@ const DailyReports = () => {
   return (
     <Box>
       <h2>Ag-Gridのコンポーネント</h2>
-      <Box className='ag-theme-alpine' sx={{ height: 600, width: 600 }}>
-        <AgGridReact rowData={dailyReports} columnDefs={columnDefs} />
-      </Box>
+      <AgGrid
+        agGridReactProps={{
+          columnDefs,
+          rowData: dailyReports,
+        }}
+      />
       <Box sx={{ mt: 1 }}>
         <Button text='JSONplaceholderに移動' onClick={moveToPlaceHolder} />
       </Box>
