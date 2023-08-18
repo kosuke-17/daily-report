@@ -14,16 +14,16 @@ type JSONPlaceholderType = {
 }
 
 const JSONPlaceholder = () => {
-  const [posts, setPosts] = useState<JSONPlaceholderType[]>([])
+  const [articles, setArticles] = useState<JSONPlaceholderType[]>([])
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    const getPosts = async () => {
+    const getArticles = async () => {
       const res = await axios.get('https://jsonplaceholder.typicode.com/posts')
-      setPosts(res.data)
+      setArticles(res.data)
     }
-    getPosts()
+    getArticles()
   }, [])
 
   const moveToDailyReport = () => {
@@ -44,7 +44,7 @@ const JSONPlaceholder = () => {
         <AgGrid
           agGridReactProps={{
             columnDefs,
-            rowData: posts,
+            rowData: articles,
           }}
         />
         <Button text='Ag-Gridに移動' onClick={moveToDailyReport} />
