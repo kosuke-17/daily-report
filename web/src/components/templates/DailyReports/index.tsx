@@ -11,7 +11,7 @@ import Box from '@mui/material/Box'
 import { useNavigate } from 'react-router-dom'
 import Button from '../../atoms/Button'
 
-const AgGrid = () => {
+const DailyReports = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const dailyReports = useSelector(selectDailyReports)
@@ -44,4 +44,4 @@ const AgGrid = () => {
   )
 }
 
-export default AgGrid
+export default DailyReports
