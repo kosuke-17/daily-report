@@ -9,7 +9,7 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Button from '../../atoms/Button'
 import AgGrid from '../../organisms/AgGrid'
-import Stack from '@mui/material/Stack'
+import Box from '@mui/material/Box'
 
 const DailyReports = () => {
   const navigate = useNavigate()
@@ -33,16 +33,16 @@ const DailyReports = () => {
 
   return (
     <>
-      <h2>Ag-Gridのコンポーネント</h2>
-      <Stack spacing={1}>
-        <AgGrid
-          agGridReactProps={{
-            columnDefs,
-            rowData: dailyReports,
-          }}
-        />
+      <h2>Daily Reportのコンポーネント</h2>
+      <AgGrid
+        agGridReactProps={{
+          columnDefs,
+          rowData: dailyReports,
+        }}
+      />
+      <Box sx={{ mt: 1 }}>
         <Button text='JSONplaceholderに移動' onClick={moveToPlaceHolder} />
-      </Stack>
+      </Box>
     </>
   )
 }
