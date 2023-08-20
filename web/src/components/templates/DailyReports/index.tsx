@@ -20,8 +20,8 @@ const DailyReports = () => {
     dispatch(getDailyReports())
   }, [dispatch])
 
-  const moveToPlaceHolder = () => {
-    navigate('/placeholder')
+  const moveToPlaceHolders = () => {
+    navigate('/placeholders')
   }
 
   const columnDefs: ColDef<DailyReport>[] = [
@@ -29,7 +29,7 @@ const DailyReports = () => {
     { field: 'memo', headerName: '日記メモ' },
   ]
 
-  if (!dailyReports.length) return null
+  if (!dailyReports) return null
 
   return (
     <>
@@ -41,7 +41,7 @@ const DailyReports = () => {
         }}
       />
       <Box sx={{ mt: 1 }}>
-        <Button text='JSONplaceholderに移動' onClick={moveToPlaceHolder} />
+        <Button text='JSONplaceholderに移動' onClick={moveToPlaceHolders} />
       </Box>
     </>
   )
